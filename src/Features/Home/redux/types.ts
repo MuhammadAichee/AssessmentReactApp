@@ -1,10 +1,14 @@
 export interface IUser {
     username: string;
     email: string;
-    country : string;
+    country : ICountry;
     _id : string
 }
 
+interface ICountry{
+    name : string;
+    _id : string;
+}
 
 export interface IHomeReducer {
     users : IUser[]

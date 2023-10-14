@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { getAllUsers, getAllUsersWithParams } from "./redux/thunk";
 import { IGetUserParams } from "./redux/types";
 import { setLoadingState } from "Components/loader/redux/slice";
+import HomeTable from "./table/table.index";
 
 const Home = () => {
   const dispatch = useAppDispatch();
@@ -36,7 +37,7 @@ const Home = () => {
         dispatch(setLoadingState(false));
       });
   }, []);
-  return <div>Ahsan</div>;
+  return <div><HomeTable/></div>;
 };
 
 export default Home;

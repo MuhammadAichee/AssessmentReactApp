@@ -6,6 +6,7 @@ const Axios = axios.create();
 Axios.interceptors.response.use(
   (response) => response,
   (error) => {
+    debugger;
     //Error from Server
     if (error.response) {
       // interceptor to redirect user to login page if not authorized
@@ -35,16 +36,7 @@ Axios.interceptors.response.use(
         throw error.response.data;
       }
     }
-    //Server down
-    else if (
-      error.request &&
-      error.message &&
-      error.message.toLowerCase() === "network error"
-    ) {
-      throw "The server is currently unavailable";
     }
-    throw error.response;
-  }
 );
 const fetchToken = () => {
   const token = `${localStorage.getItem("token")}`;
@@ -128,14 +120,13 @@ export const putRequest = (url: string, hasHeaders: boolean, data: any) => {
   );
 };
 
-export const deleteRequest = (url: string, hasHeaders: boolean, data: any) => {
+export const deleteRequest = (url: string, hasHeaders: boolean, id: any) => {
   const token = fetchToken();
-  return Axios.delete(`${SERVER_URL}${url}`, {
+  return Axios.delete(`${SERVER_URL}${url}/${id}`, {
     headers: hasHeaders
       ? {
           Authorization: "Bearer " + token,
         }
-      : undefined,
-    data: data,
+      : undefined
   });
 };

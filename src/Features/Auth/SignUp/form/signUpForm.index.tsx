@@ -4,9 +4,9 @@ import { Button, Card, Checkbox, Col, Form, Input, Row, Select } from "antd";
 import { useAppDispatch, useAppSelector } from "Store/hooks";
 import { setLoadingState } from "Components/loader/redux/slice";
 import { useNavigate } from "react-router-dom";
-import { selectCountries } from "../redux/selector";
-import { ICountry, ISignUp } from "../redux/types";
-import { signup } from "../redux/thunk";
+import { selectCities, selectCountries, selectStates } from "../redux/selector";
+import { ICity, ICountry, ISignUp, IState } from "../redux/types";
+import { getAllCities, getAllStates, signup } from "../redux/thunk";
 const { Option } = Select;
 
 const SignUpForm: React.FC = () => {
@@ -14,9 +14,11 @@ const SignUpForm: React.FC = () => {
   const navigate = useNavigate();
 
   const countriesReducer = useAppSelector(selectCountries);
+  const citiesReducer = useAppSelector(selectCities);
+  const statesReducer = useAppSelector(selectStates);
   const onFinish = (values: any) => {
     try {
-      let { username, password, confirmPassword, email, country } = values;
+      let { username, password, confirmPassword, email, country, state, city } = values;
       dispatch(setLoadingState(true));
       let signUpPayload: ISignUp = {
         username: username,
@@ -24,6 +26,8 @@ const SignUpForm: React.FC = () => {
         confirmPassword: confirmPassword,
         email: email,
         country: country,
+        state : state,
+        city : city
       };
       dispatch(signup(signUpPayload)).unwrap().then((response:any)=>{
         dispatch(setLoadingState(false));
@@ -31,10 +35,16 @@ const SignUpForm: React.FC = () => {
         navigate("/")
       })
     } catch (err: any) {
+      console.log(err)
       dispatch(setLoadingState(false));
     }
   };
-
+  const onChangeCountry = (value:any) => {
+    dispatch(getAllStates(value))
+  }
+  const onChangeState = (value:any) => {
+    dispatch(getAllCities(value))
+  }
   return (
     <Card title="Register User" bordered={true} style={{ width: "100% " }}>
       <Form
@@ -94,7 +104,7 @@ const SignUpForm: React.FC = () => {
           hasFeedback
           rules={[{ required: true, message: "Please select your country!" }]}
         >
-          <Select placeholder="Please select a Country">
+          <Select onChange={onChangeCountry} placeholder="Please select a Country">
             {countriesReducer.map((country: ICountry) => {
               return (
                 <Option key={country.name} value={country.name}>
@@ -104,18 +114,18 @@ const SignUpForm: React.FC = () => {
             })}
           </Select>
         </Form.Item>
-        {/* <div style={{ display: "flex" }}>
+        <div style={{ display: "flex" }}>
           <Form.Item
             name="state"
             label="State"
             hasFeedback
-            // rules={[{ required: true, message: "Please select your country!" }]}
+            rules={[{ required: true, message: "Please select your State!" }]}
           >
-            <Select placeholder="Please select a state">
-              {countriesReducer.map((country: ICountry) => {
+            <Select onChange={onChangeState} placeholder="Please select a state">
+              {statesReducer.map((state: IState) => {
                 return (
-                  <Option key={country._id} value={country._id}>
-                    {country.name}
+                  <Option key={state._id} value={state.name}>
+                    {state.name}
                   </Option>
                 );
               })}
@@ -125,19 +135,19 @@ const SignUpForm: React.FC = () => {
             name="city"
             label="City"
             hasFeedback
-            // rules={[{ required: true, message: "Please select your City" }]}
+            rules={[{ required: true, message: "Please select your City" }]}
           >
             <Select placeholder="Please select a city">
-              {countriesReducer.map((country: ICountry) => {
+              {citiesReducer.map((city: ICity) => {
                 return (
-                  <Option key={country._id} value={country._id}>
-                    {country.name}
+                  <Option key={city._id} value={city.name}>
+                    {city.name}
                   </Option>
                 );
               })}
             </Select>
           </Form.Item>
-        </div> */}
+        </div>
         <Form.Item style={{ marginTop: "1.5rem" }}>
           <Button
             style={{ width: "100%" }}

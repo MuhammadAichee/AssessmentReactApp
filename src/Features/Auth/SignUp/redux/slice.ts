@@ -1,9 +1,11 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { ISignUpReducer } from "./types";
-import { getAllCountries } from "./thunk";
+import { getAllCities, getAllCountries, getAllStates } from "./thunk";
 
 const initialState: ISignUpReducer = {
   countries: [],
+  states : [],
+  cities : []
 };
 
 export const SignUp = createSlice({
@@ -20,6 +22,12 @@ export const SignUp = createSlice({
   extraReducers(builder) {
     builder.addCase(getAllCountries.fulfilled, (state, action) => {
         state.countries = action.payload.countries;    
+    });
+    builder.addCase(getAllCities.fulfilled, (state, action) => {
+        state.cities = action.payload.cities;    
+    });
+    builder.addCase(getAllStates.fulfilled, (state, action) => {
+        state.states = action.payload.states;    
     });
   },
 });
