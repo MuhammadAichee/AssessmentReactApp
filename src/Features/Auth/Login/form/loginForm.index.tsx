@@ -1,10 +1,32 @@
 import React from "react";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import { Button, Card, Checkbox, Form, Input } from "antd";
+import { ILogin } from "../redux/types";
+import { useAppDispatch } from "Store/hooks";
+import { postLogin } from "../redux/thunk";
+import { setLoadingState } from "Components/loader/redux/slice";
+import { useNavigate } from "react-router-dom";
 
 const LoginForm: React.FC = () => {
+  const dispatch = useAppDispatch()  
+  const navigate = useNavigate()  
   const onFinish = (values: any) => {
-    console.log("Received values of form: ", values);
+    dispatch(setLoadingState(true))
+    let loginPayload : ILogin = {
+        username : values.username,
+        password : values.password
+    }
+    dispatch(postLogin(loginPayload)).unwrap().then((response:any)=>{
+        const {username, token} = response
+        localStorage.setItem("token",token)
+        localStorage.setItem("username",username)
+        dispatch(setLoadingState(false))
+        navigate("/Home")
+    }).catch((err:any)=>{
+        console.log(err)
+        dispatch(setLoadingState(false))
+    })
+
   };
 
   return (
@@ -46,7 +68,7 @@ const LoginForm: React.FC = () => {
             Log in
           </Button>
         </Form.Item>
-        Or <a href="">register now!</a>
+        Or <a onClick={()=>{navigate("/signup")}}>register now!</a>
       </Form>
     </Card>
   );
