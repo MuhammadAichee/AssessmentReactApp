@@ -1,9 +1,12 @@
-import { useAppDispatch } from "Store/hooks";
+import { useAppDispatch, useAppSelector } from "Store/hooks";
 import { useEffect, useState } from "react";
-import { getAllUsers, getAllUsersWithParams } from "./redux/thunk";
+import { getAllUsersWithParams } from "./redux/thunk";
 import { IGetUserParams } from "./redux/types";
 import { setLoadingState } from "Components/loader/redux/slice";
 import HomeTable from "./table/table.index";
+import { selectIsModalOpen } from "./redux/selector";
+import { Modal } from "antd";
+import { setIsModalOpen } from "./redux/slice";
 
 const Home = () => {
   const dispatch = useAppDispatch();
@@ -37,7 +40,12 @@ const Home = () => {
         dispatch(setLoadingState(false));
       });
   }, []);
-  return <div><HomeTable/></div>;
+  return (
+    <div>
+      <HomeTable page={page} setPage={setPage}/>
+      
+    </div>
+  );
 };
 
 export default Home;

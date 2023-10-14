@@ -1,8 +1,20 @@
 import { Popover } from "antd";
-import './header.index.css'
+import "./header.index.css";
+import { useNavigate } from "react-router-dom";
 const Header = () => {
+  const navigate = useNavigate();
+  const logout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("username");
+    navigate("/");
+  };
   const content = (
-    <div className={"logout-div"}>
+    <div
+      className={"logout-div"}
+      onClick={() => {
+        logout();
+      }}
+    >
       {/* <img src={Logout} alt="" className={style["logout-image"]} /> */}
       <div>Logout</div>
     </div>
@@ -19,7 +31,9 @@ const Header = () => {
             /> */}
           <div>
             <label style={{ color: "black" }}>{"Welcome, "}</label>
-            <label style={{ color: "black" }}>{localStorage.getItem("username") ?? ""}</label>
+            <label style={{ color: "black" }}>
+              {localStorage.getItem("username") ?? ""}
+            </label>
           </div>
         </div>
       </Popover>

@@ -4,6 +4,7 @@ import { ColumnsType } from "antd/es/table";
 import { deleteUser, getAllUsersWithParams } from "../redux/thunk";
 import { setLoadingState } from "Components/loader/redux/slice";
 import { IGetUserParams } from "../redux/types";
+import { setIsModalOpen, setSelectedUser } from "../redux/slice";
 
 const ActionCreater = (record: any) => {
   const fetchAllUsers = () => {
@@ -39,8 +40,16 @@ const ActionCreater = (record: any) => {
         dispatch(setLoadingState(true));
       });
   };
+  const editUserHandler = () => {
+    console.log(record)
+    dispatch(setSelectedUser(record))
+    dispatch(setIsModalOpen(true))
+  }
   return (
     <Space size="middle">
+      <a onClick={() => {
+          editUserHandler();
+        }}>Edit</a>
       <a
         onClick={() => {
           deleteSelectedUser();
@@ -68,6 +77,16 @@ export const columns: ColumnsType<any> = [
     title: "Country",
     dataIndex: "country",
     render: (country) => <span>{country ? country.name : ""}</span>,
+  },
+  {
+    title: "State",
+    dataIndex: "state",
+    render: (state) => <span>{state ? state.name : ""}</span>,
+  },
+  {
+    title: "City",
+    dataIndex: "city",
+    render: (city) => <span>{city ? city.name : ""}</span>,
   },
   // {
   //   title: 'Tags',

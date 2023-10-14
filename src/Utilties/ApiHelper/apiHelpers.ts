@@ -6,37 +6,10 @@ const Axios = axios.create();
 Axios.interceptors.response.use(
   (response) => response,
   (error) => {
-    debugger;
-    //Error from Server
     if (error.response) {
-      // interceptor to redirect user to login page if not authorized
-      if (error.response.status === 401) {
-        // if response status is 401 unauthorised
-        localStorage.removeItem("token"); // remove token from local storage
-        localStorage.removeItem("username"); // remove user data from local storage
-        if (window.location.pathname !== "/") {
-          const history = useNavigate();
-          history("/"); // redirect to login page
-        }
-      }
-      if (
-        error.response.status === 500 &&
-        localStorage.getItem("token") === null
-      ) {
-        localStorage.removeItem("token"); // remove token from local storage
-        localStorage.removeItem("username"); // remove user data from local storage
-        if (window.location.pathname !== "/") {
-          window.location.pathname = "/";
-        }
-      }
-
-      if (error.response.data.Message) {
-        throw error.response.data.Message;
-      } else {
-        throw error.response.data;
-      }
+      throw error.response;
     }
-    }
+  }
 );
 const fetchToken = () => {
   const token = `${localStorage.getItem("token")}`;
@@ -105,10 +78,10 @@ export const postRequest = (url: string, hasHeaders: boolean, data: any) => {
   );
 };
 
-export const putRequest = (url: string, hasHeaders: boolean, data: any) => {
+export const putRequest = (url: string, hasHeaders: boolean, data: any, id :string) => {
   const token = fetchToken();
   return Axios.put(
-    `${SERVER_URL}${url}`,
+    `${SERVER_URL}${url}/${id}`,
     { ...data },
     hasHeaders
       ? {
@@ -127,6 +100,6 @@ export const deleteRequest = (url: string, hasHeaders: boolean, id: any) => {
       ? {
           Authorization: "Bearer " + token,
         }
-      : undefined
+      : undefined,
   });
 };

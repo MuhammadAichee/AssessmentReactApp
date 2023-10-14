@@ -18,7 +18,8 @@ const SignUpForm: React.FC = () => {
   const statesReducer = useAppSelector(selectStates);
   const onFinish = (values: any) => {
     try {
-      let { username, password, confirmPassword, email, country, state, city } = values;
+      let { username, password, confirmPassword, email, country, state, city } =
+        values;
       dispatch(setLoadingState(true));
       let signUpPayload: ISignUp = {
         username: username,
@@ -26,25 +27,27 @@ const SignUpForm: React.FC = () => {
         confirmPassword: confirmPassword,
         email: email,
         country: country,
-        state : state,
-        city : city
+        state: state,
+        city: city,
       };
-      dispatch(signup(signUpPayload)).unwrap().then((response:any)=>{
-        dispatch(setLoadingState(false));
-        alert(response);
-        navigate("/")
-      })
+      dispatch(signup(signUpPayload))
+        .unwrap()
+        .then((response: any) => {
+          dispatch(setLoadingState(false));
+          alert(response);
+          navigate("/");
+        });
     } catch (err: any) {
-      console.log(err)
+      console.log(err);
       dispatch(setLoadingState(false));
     }
   };
-  const onChangeCountry = (value:any) => {
-    dispatch(getAllStates(value))
-  }
-  const onChangeState = (value:any) => {
-    dispatch(getAllCities(value))
-  }
+  const onChangeCountry = (value: any) => {
+    dispatch(getAllStates(value));
+  };
+  const onChangeState = (value: any) => {
+    dispatch(getAllCities(value));
+  };
   return (
     <Card title="Register User" bordered={true} style={{ width: "100% " }}>
       <Form
@@ -104,7 +107,10 @@ const SignUpForm: React.FC = () => {
           hasFeedback
           rules={[{ required: true, message: "Please select your country!" }]}
         >
-          <Select onChange={onChangeCountry} placeholder="Please select a Country">
+          <Select
+            onChange={onChangeCountry}
+            placeholder="Please select a Country"
+          >
             {countriesReducer.map((country: ICountry) => {
               return (
                 <Option key={country.name} value={country.name}>
@@ -114,14 +120,18 @@ const SignUpForm: React.FC = () => {
             })}
           </Select>
         </Form.Item>
-        <div style={{ display: "flex" }}>
+        <div style={{ display: "flex", width: "100%" }}>
           <Form.Item
             name="state"
             label="State"
             hasFeedback
+            style={{ width: "100%", marginRight:'10px' }}
             rules={[{ required: true, message: "Please select your State!" }]}
           >
-            <Select onChange={onChangeState} placeholder="Please select a state">
+            <Select
+              onChange={onChangeState}
+              placeholder="Please select a state"
+            >
               {statesReducer.map((state: IState) => {
                 return (
                   <Option key={state._id} value={state.name}>
@@ -135,6 +145,7 @@ const SignUpForm: React.FC = () => {
             name="city"
             label="City"
             hasFeedback
+            style={{ width: "100%" }}
             rules={[{ required: true, message: "Please select your City" }]}
           >
             <Select placeholder="Please select a city">
