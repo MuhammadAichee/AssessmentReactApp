@@ -1,3 +1,5 @@
+import Login from "Features/Auth/Login/login.index";
+
 export interface IRoutes {
 	path: string;
 	component: any;
@@ -14,7 +16,6 @@ export const PrivateRoutes : IRoutes[] = [
 export  const PublicRoutes : IRoutes[] = [
     {
         path:"/",
-        component: null,
-        layout : null
+        component: Login
     }
 ]
