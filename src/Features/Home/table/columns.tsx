@@ -16,7 +16,7 @@ const ActionCreater = (record: any) => {
       page: 1,
       limit: 5,
       sortBy: "username",
-      sortOrder: "adx",
+      sortOrder: "asc",
     };
     dispatch(getAllUsersWithParams(queryPayload))
       .unwrap()

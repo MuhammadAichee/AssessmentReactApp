@@ -36,7 +36,7 @@ const HomeTable = ({ page, setPage }: any) => {
       page: 1,
       limit: 5,
       sortBy: "username",
-      sortOrder: "adx",
+      sortOrder: "asc",
     };
     dispatch(getAllUsersWithParams(queryPayload))
       .unwrap()
@@ -81,7 +81,7 @@ const HomeTable = ({ page, setPage }: any) => {
     }
   }, [selectedUser]);
   const onPageChange = (e: any) => {
-    console.log(e);
+    setPage(e);
   };
   const paginationOptions = {
     current: page,
@@ -91,6 +91,7 @@ const HomeTable = ({ page, setPage }: any) => {
   };
   return (
     <div>
+
       <Table
         pagination={paginationOptions}
         columns={columns}

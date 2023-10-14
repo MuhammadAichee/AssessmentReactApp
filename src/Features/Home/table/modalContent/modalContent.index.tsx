@@ -10,10 +10,14 @@ import { useAppDispatch, useAppSelector } from "Store/hooks";
 import { Form, Input, Select } from "antd";
 import { useNavigate } from "react-router-dom";
 import { LockOutlined, UserOutlined, MailOutlined } from "@ant-design/icons";
-import { getAllCities, getAllCountries, getAllStates } from "Features/Home/redux/thunk";
+import {
+  getAllCities,
+  getAllCountries,
+  getAllStates,
+} from "Features/Home/redux/thunk";
 import { useEffect } from "react";
 
-const ModalContent = ({formRef}:any) => {
+const ModalContent = ({ formRef }: any) => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const selectedUser = useAppSelector(selectCurrentUsers);
@@ -21,19 +25,19 @@ const ModalContent = ({formRef}:any) => {
   const countriesReducer = useAppSelector(selectCountries);
   const citiesReducer = useAppSelector(selectCities);
   const statesReducer = useAppSelector(selectStates);
-  
+
   const onChangeCountry = (value: any) => {
     dispatch(getAllStates(value));
-    formRef.setFieldValue(["state","name"],"")
-    formRef.setFieldValue(["city","name"],"")
-};
+    formRef.setFieldValue(["state", "name"], "");
+    formRef.setFieldValue(["city", "name"], "");
+  };
   const onChangeState = (value: any) => {
     dispatch(getAllCities(value));
-    formRef.setFieldValue(["city","name"],"")
+    formRef.setFieldValue(["city", "name"], "");
   };
-  useEffect(()=>{
-    dispatch(getAllCountries())
-  },[])
+  useEffect(() => {
+    dispatch(getAllCountries());
+  }, []);
   const { Option } = Select;
 
   return (
