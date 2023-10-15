@@ -18,3 +18,12 @@
   width: 420px;
   z-index: 1;
 }
+
+.state-country-div{
+  display: flex;
+  width: 100% !important;
+}
+.state-form-item-div{
+  margin-right:10px !important;
+  width: 100% !important;
+}

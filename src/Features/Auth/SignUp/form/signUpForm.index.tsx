@@ -58,13 +58,16 @@ const SignUpForm: React.FC = () => {
   };
   const onChangeCountry = (value: any) => {
     dispatch(getAllStates(value));
+    form.setFieldValue("state",null);
+    form.setFieldValue("city",null);
   };
   const onChangeState = (value: any) => {
     dispatch(getAllCities(value));
+    form.setFieldValue("city",null);
   };
   const passwordValue = Form.useWatch("password", form);
   return (
-    <Card title="Register User" bordered={true} style={{ width: "100% " }}>
+    <Card title="Register User" bordered={true} style={{ width: "100%" }}>
       <Form
         className="signup-form"
         initialValues={{ remember: true }}
@@ -152,14 +155,14 @@ const SignUpForm: React.FC = () => {
             })}
           </Select>
         </Form.Item>
-        <div style={{ display: "flex", width: "100%" }}>
+        <div className="state-country-div">
           <Form.Item
             name="state"
             label="State"
             hasFeedback
-            style={{ width: "100%", marginRight: "10px" }}
+            className="state-form-item-div"
             rules={[{ required: true, message: "Please select your State!" }]}
-          >
+>
             <Select
               onChange={onChangeState}
               placeholder="Please select a state"
