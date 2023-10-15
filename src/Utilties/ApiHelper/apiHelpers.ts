@@ -1,14 +1,17 @@
 import { SERVER_URL } from "Configuration/constants";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { useNavigate } from "react-router-dom";
 
 const Axios = axios.create();
+interface CustomError extends Error {
+  response?: any;
+  request?: any;
+  config?: any;
+}
 Axios.interceptors.response.use(
   (response) => response,
-  (error) => {
-    if (error.response) {
-      throw error.response;
-    }
+  (error: AxiosError) => {
+    throw error;
   }
 );
 const fetchToken = () => {
@@ -63,7 +66,6 @@ export const getRequestWithParams = (
 
 export const postRequest = (url: string, hasHeaders: boolean, data: any) => {
   const token = fetchToken();
-  console.log(url, hasHeaders, data);
   return Axios.post(
     `${SERVER_URL}${url}`,
     data,

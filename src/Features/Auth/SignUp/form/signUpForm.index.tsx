@@ -1,6 +1,15 @@
 import React from "react";
 import { LockOutlined, UserOutlined, MailOutlined } from "@ant-design/icons";
-import { Button, Card, Checkbox, Col, Form, Input, Row, Select } from "antd";
+import {
+  Button,
+  Card,
+  Checkbox,
+  Col,
+  Form,
+  Input,
+  message,
+  Select,
+} from "antd";
 import { useAppDispatch, useAppSelector } from "Store/hooks";
 import { setLoadingState } from "Components/loader/redux/slice";
 import { useNavigate } from "react-router-dom";
@@ -12,35 +21,40 @@ const { Option } = Select;
 const SignUpForm: React.FC = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-
+  const [form] = Form.useForm();
   const countriesReducer = useAppSelector(selectCountries);
   const citiesReducer = useAppSelector(selectCities);
   const statesReducer = useAppSelector(selectStates);
+  const success = () => {
+    message.success("User created Successfully");
+    navigate("/");
+  };
+  const error = (description: string) => {
+    message.error(description);
+  };
   const onFinish = (values: any) => {
-    try {
-      let { username, password, confirmPassword, email, country, state, city } =
-        values;
-      dispatch(setLoadingState(true));
-      let signUpPayload: ISignUp = {
-        username: username,
-        password: password,
-        confirmPassword: confirmPassword,
-        email: email,
-        country: country,
-        state: state,
-        city: city,
-      };
-      dispatch(signup(signUpPayload))
-        .unwrap()
-        .then((response: any) => {
-          dispatch(setLoadingState(false));
-          alert(response);
-          navigate("/");
-        });
-    } catch (err: any) {
-      console.log(err);
-      dispatch(setLoadingState(false));
-    }
+    let { username, password, confirmPassword, email, country, state, city } =
+      values;
+    dispatch(setLoadingState(true));
+    let signUpPayload: ISignUp = {
+      username: username,
+      password: password,
+      confirmPassword: confirmPassword,
+      email: email,
+      country: country,
+      state: state,
+      city: city,
+    };
+    dispatch(signup(signUpPayload))
+      .unwrap()
+      .then((response: any) => {
+        dispatch(setLoadingState(false));
+        success();
+      })
+      .catch((err: any) => {
+        error(err.message);
+        dispatch(setLoadingState(false));
+      });
   };
   const onChangeCountry = (value: any) => {
     dispatch(getAllStates(value));
@@ -48,6 +62,7 @@ const SignUpForm: React.FC = () => {
   const onChangeState = (value: any) => {
     dispatch(getAllCities(value));
   };
+  const passwordValue = Form.useWatch("password", form);
   return (
     <Card title="Register User" bordered={true} style={{ width: "100% " }}>
       <Form
@@ -55,6 +70,7 @@ const SignUpForm: React.FC = () => {
         initialValues={{ remember: true }}
         onFinish={onFinish}
         layout={"vertical"}
+        form={form}
       >
         <Form.Item
           label={"User Name"}
@@ -92,7 +108,23 @@ const SignUpForm: React.FC = () => {
           <Form.Item
             label={"Confirm Password"}
             name="confirmPassword"
-            rules={[{ required: true, message: "Please input your Password!" }]}
+            rules={[
+              {
+                required: true,
+                validator(_, value) {
+                  if (!value) {
+                    return Promise.reject(
+                      new Error("Please enter Confirm Password")
+                    );
+                  } else if (value && value !== passwordValue) {
+                    return Promise.reject(
+                      new Error("Password and confirm password does not match")
+                    );
+                  }
+                  return Promise.resolve();
+                },
+              },
+            ]}
           >
             <Input
               prefix={<LockOutlined className="site-form-item-icon" />}
@@ -125,7 +157,7 @@ const SignUpForm: React.FC = () => {
             name="state"
             label="State"
             hasFeedback
-            style={{ width: "100%", marginRight:'10px' }}
+            style={{ width: "100%", marginRight: "10px" }}
             rules={[{ required: true, message: "Please select your State!" }]}
           >
             <Select
@@ -169,6 +201,8 @@ const SignUpForm: React.FC = () => {
             Register
           </Button>
         </Form.Item>
+        <a onClick={()=>{navigate("/")}}>back to Login</a>
+
       </Form>
     </Card>
   );

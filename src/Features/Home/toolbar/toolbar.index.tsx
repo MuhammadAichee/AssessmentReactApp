@@ -106,6 +106,7 @@ const Toolbar = ({
             setSearchString("");
             setCountry(null);
             setState(null);
+            setCity(null);
           }}
         >
           Reset Filters

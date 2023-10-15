@@ -1,6 +1,6 @@
 import React from "react";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
-import { Button, Card, Checkbox, Form, Input } from "antd";
+import { Button, Card, Checkbox, Form, Input,message } from "antd";
 import { ILogin } from "../redux/types";
 import { useAppDispatch } from "Store/hooks";
 import { postLogin } from "../redux/thunk";
@@ -10,6 +10,10 @@ import { useNavigate } from "react-router-dom";
 const LoginForm: React.FC = () => {
   const dispatch = useAppDispatch()  
   const navigate = useNavigate()  
+  const error = (description: string) => {
+    message.error(description);
+  };
+  
   const onFinish = (values: any) => {
     dispatch(setLoadingState(true))
     let loginPayload : ILogin = {
@@ -24,6 +28,7 @@ const LoginForm: React.FC = () => {
         navigate("/Home")
     }).catch((err:any)=>{
         console.log(err)
+        error(err.message)
         dispatch(setLoadingState(false))
     })
 

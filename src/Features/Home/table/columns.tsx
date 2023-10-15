@@ -1,12 +1,21 @@
 import { useAppDispatch } from "Store/hooks";
-import { Space } from "antd";
+import { Popconfirm, Space, message } from "antd";
 import { ColumnsType } from "antd/es/table";
 import { deleteUser, getAllUsersWithParams } from "../redux/thunk";
 import { setLoadingState } from "Components/loader/redux/slice";
 import { IGetUserParams } from "../redux/types";
 import { setIsModalOpen, setSelectedUser } from "../redux/slice";
+import { DeleteOutlined, EditFilled } from "@ant-design/icons";
 
-const ActionCreater = (record: any) => {
+import "../home.index.css";
+
+const ActionCreater: React.FC = (record: any) => {
+  const success = () => {
+    message.success("User Deleted Successfully");
+  };
+  const error = (description: string) => {
+    message.error(description);
+  };
   const fetchAllUsers = () => {
     let queryPayload: IGetUserParams = {
       search: "",
@@ -29,35 +38,47 @@ const ActionCreater = (record: any) => {
   };
   const dispatch = useAppDispatch();
   const deleteSelectedUser = () => {
+    if (localStorage.getItem("username") === record.username) {
+      error("Logged In user can not be deleted");
+      return
+    }
     dispatch(setLoadingState(true));
     dispatch(deleteUser(record._id))
       .unwrap()
       .then(() => {
         dispatch(setLoadingState(true));
+        success();
         fetchAllUsers();
       })
-      .catch(() => {
-        dispatch(setLoadingState(true));
+      .catch((err: any) => {
+        dispatch(setLoadingState(false));
+        error(err);
       });
   };
   const editUserHandler = () => {
-    console.log(record)
-    dispatch(setSelectedUser(record))
-    dispatch(setIsModalOpen(true))
-  }
+    dispatch(setSelectedUser(record));
+    dispatch(setIsModalOpen(true));
+  };
   return (
-    <Space size="middle">
-      <a onClick={() => {
-          editUserHandler();
-        }}>Edit</a>
-      <a
-        onClick={() => {
-          deleteSelectedUser();
-        }}
-      >
-        Delete
-      </a>
-    </Space>
+    <>
+      <Space size="middle">
+        <EditFilled
+          color="red"
+          onClick={() => {
+            editUserHandler();
+          }}
+        />
+        <Popconfirm
+          placement="bottomRight"
+          title="Delete action can't be reverted. Do you still want to delete?"
+          onConfirm={deleteSelectedUser}
+          okText="Yes"
+          cancelText="No"
+        >
+          <DeleteOutlined color="red" />
+        </Popconfirm>
+      </Space>
+    </>
   );
 };
 
@@ -66,9 +87,11 @@ export const columns: ColumnsType<any> = [
     title: "Name",
     dataIndex: "username",
     key: "username",
+    sorter: true,
     render: (text) => <a>{text}</a>,
   },
   {
+    sorter: true,
     title: "Email",
     dataIndex: "email",
     key: "email",

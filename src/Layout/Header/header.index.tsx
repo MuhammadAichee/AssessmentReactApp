@@ -1,6 +1,8 @@
 import { Popover } from "antd";
+import { PoweroffOutlined } from '@ant-design/icons';
 import "./header.index.css";
 import { useNavigate } from "react-router-dom";
+import Avatar from "Assets/Images/avatar.png"
 const Header = () => {
   const navigate = useNavigate();
   const logout = () => {
@@ -15,23 +17,25 @@ const Header = () => {
         logout();
       }}
     >
-      {/* <img src={Logout} alt="" className={style["logout-image"]} /> */}
-      <div>Logout</div>
+      <PoweroffOutlined/>
+      <div style={{marginLeft:"5px"}}>Logout</div>
     </div>
   );
 
   return (
     <div className="headerContainer">
-      <Popover placement="bottom" content={content} trigger="click">
+        <div></div>
+      <Popover placement="bottom" content={content} trigger="click" >
         <div className={"userInfo"}>
-          {/* <img
-              className={style["avatar"]}
-              src={userAvatarPath}
+          <img
+              className={"avatar"}
+              src={Avatar}
               alt="Avatar"
-            /> */}
-          <div>
-            <label style={{ color: "black" }}>{"Welcome, "}</label>
-            <label style={{ color: "black" }}>
+            />
+          <div className="name-info">
+            <label className="name-text">{"Welcome, "}</label>
+            <br/>
+            <label className="name-text">
               {localStorage.getItem("username") ?? ""}
             </label>
           </div>

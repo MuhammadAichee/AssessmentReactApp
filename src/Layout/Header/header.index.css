@@ -11,12 +11,13 @@
 }
 .avatar {
     height: 45px;
-    width: 45px;
+    width: 50px;
     padding-right: 5px;
 }
 
 .userInfo {
     display: flex;
+    cursor: pointer;
 }
 
 .label-text {
@@ -39,4 +40,14 @@
     background-color: #2a4d98;
     color: white;
     height: 36px;
+}
+
+.name-info{
+    margin-top: 4px !important;
+    margin-left: 4px !important;
+}
+.name-text{
+    color: white;
+    cursor: pointer;
+    font-weight: 500;
 }

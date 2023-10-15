@@ -13,8 +13,8 @@ const Home = () => {
   const dispatch = useAppDispatch();
   const [searchString, setSearchString] = useState<string>("");
   const [countrySelector, setCountrySelector] = useState<string | null>(null);
-  const [citySelector, setCitySelector] = useState<string|null>(null);
-  const [stateSelector, setStateSelector] = useState<string|null>(null);
+  const [citySelector, setCitySelector] = useState<string | null>(null);
+  const [stateSelector, setStateSelector] = useState<string | null>(null);
   const [page, setPage] = useState<number>(1);
   const [limit, setLimit] = useState<number>(5);
   const [sortBy, setSortBy] = useState<string>("username");
@@ -50,7 +50,15 @@ const Home = () => {
   }, []);
   useEffect(() => {
     fetchUsers();
-  }, [page, searchString, countrySelector,citySelector,stateSelector]);
+  }, [
+    page,
+    searchString,
+    countrySelector,
+    citySelector,
+    stateSelector,
+    sortBy,
+    sortOrder,
+  ]);
   return (
     <div>
       <Toolbar
@@ -62,7 +70,12 @@ const Home = () => {
         state={stateSelector}
         setState={setStateSelector}
       />
-      <HomeTable page={page} setPage={setPage} />
+      <HomeTable
+        page={page}
+        setSortBy={setSortBy}
+        setSortOrder={setSortOrder}
+        setPage={setPage}
+      />
     </div>
   );
 };
